@@ -1,0 +1,57 @@
+# 📝 Lab 4 Report – Gesture Recognition Wand  
+
+---
+
+## 1. What is the goal of this lab?
+
+The goal is to build a simple gesture recognition system using an ESP32, an MPU6050 accelerometer, and a pre-trained Edge Impulse model. It demonstrates how embedded ML can detect motion patterns and classify them into gestures like "O", "V", or "Z", triggering LED feedback.
+
+---
+
+## 2. What machine learning model did you use? How did you train it?
+
+I used an **Edge Impulse classification model** trained with accelerometer data for the three gestures: "O", "V", and "Z". The model was trained using:
+
+- **Input**: 3-axis accelerometer data at 100Hz  
+- **DSP**: Spectral analysis  
+- **Learning block**: Classification (neural network classifier)  
+- **Collected using**: Edge Impulse Studio via data acquisition  
+
+I labeled each sample and verified accuracy using a test set.
+
+---
+
+## 3. How is the data collected and passed to the model?
+
+- When the user presses the button, the device collects 1 second of accelerometer data (100 samples).
+- These samples are stored in a feature buffer.
+- The `run_classifier()` function from the Edge Impulse SDK uses this buffer to make predictions.
+- The model returns a set of class probabilities.
+- The class with the highest probability is selected, and the corresponding LED is activated.
+
+---
+
+## 4. What challenges did you face in this lab?
+
+- **Timing issues**: Ensuring samples were collected precisely every 10 ms required careful timing.
+- **Noise**: Accelerometer noise made some gestures difficult to classify without enough training data.
+- **Button debounce**: Sometimes the button would double-trigger if not handled properly.
+- **Model integration**: Ensuring the Edge Impulse `.h` file and DSP frame size matched the data capture loop was critical.
+
+---
+
+## 5. How accurate was your gesture recognition?
+
+The model correctly identified the gestures with over **90% accuracy** during testing on the hardware. Occasionally, similar motions like "O" and "Z" would be misclassified if performed too quickly or inconsistently.
+
+---
+
+## 6. How could this system be improved?
+
+- **More training data** for each gesture, especially from multiple users.
+- Add **gyro data** for improved differentiation of motion patterns.
+- Use **real-time smoothing or filtering** (e.g., low-pass filter) on raw data to reduce jitter.
+- Add **OLED display or sound** for better user feedback.
+- Package into a **wearable wand** with a rechargeable battery.
+
+---
